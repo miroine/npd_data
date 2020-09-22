@@ -22,7 +22,7 @@ pip install -i https://test.pypi.org/simple/ npd-data
 ```
 ## Quick Use
 ```
-> from npd_data.npd_wraper import field
+> from npd_data.npd_wraper import fi``eld
 >
 >df =field.get_field_production_yearly()
 >
