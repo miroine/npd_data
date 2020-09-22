@@ -8,7 +8,7 @@ Suggestions are welcome
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
 
-## Use
+## Quick Use
 
 > from npd_data.npd_wraper import field
 >
