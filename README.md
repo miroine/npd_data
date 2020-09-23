@@ -20,6 +20,11 @@ These instructions will get you a copy of the project up and running on your loc
 ```
 pip install -i https://test.pypi.org/simple/ npd-data
 ```
+
+want to contribute ? use:
+```
+git clone https://github.com/miroine/npd_data/
+```
 ## Quick Use
 ```
 > from npd_data.npd_wraper import fi``eld
