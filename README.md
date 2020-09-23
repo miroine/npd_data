@@ -27,7 +27,7 @@ git clone https://github.com/miroine/npd_data/
 ```
 ## Quick Use
 ```
-> from npd_data.npd_wraper import fi``eld
+> from npd_data.npd_wraper import field
 >
 >df =field.get_field_production_yearly()
 >
