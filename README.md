@@ -12,7 +12,7 @@ Suggestions are welcome
  * Focus on high speed with API serving
  * Output mainly based on pandas and geopandas 
  * could be combined with shape files for better data insights
-## Supported in both Linux, Windows and Mac OS (might be some issues with VPN activated)
+ * Supported in both Linux, Windows and Mac OS (might be some issues with VPN activated)
 
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
 
