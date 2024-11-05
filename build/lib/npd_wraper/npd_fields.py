@@ -5,98 +5,239 @@ import pandas as pd
 
 class field(npd):
 
-    def get_field_production_monthly(self):
+    def get_field_production_monthly(self, field_name='all', volume_type="saleable"):
         '''
-        get monthly production
+        Get production per field on monthly basis
+        example:
+        field().get_field_production_monthly()
+        return a dataframe
+        optional argument are field name currently defaulted to all fields
+        could select one field
+        volume_type: saleable, gross
         '''
-        url_dataset=self.npd_path+"field/production-monthly-by-field"
+        if volume_type.lower() == 'gross':
+            url_dataset=self._get_total_path(tag_name="field_production_gross_monthly")
+        else:
+            url_dataset=self._get_total_path(tag_name="field_production_monthly")
         df = self._get_dataframe_data(url_dataset)
         df["Date"] = df.apply(lambda row: datetime(int(row['prfYear']),int(row['prfMonth']), 1),axis=1)
         df["Date"]=pd.to_datetime(df.Date)
         df.set_index("Date", inplace=True)
-        cols = ["prfInformationCarrier", "prfPrdOilNetMillSm3", "prfPrdGasNetBillSm3",
-                "prfPrdNGLNetMillSm3", "prfPrdCondensateNetMillSm3", "prfPrdOeNetMillSm3",
-                "prfPrdProducedWaterInFieldMillSm3"]
-        return  df[cols]
+        if volume_type.lower() == "gross":
+            cols = ['prfInformationCarrier', 'prfPrdOilNetMillSm3', 'prfPrdGasNetBillSm3',
+                    'prfPrdNGLNetMillSm3', 'prfPrdCondensateNetMillSm3','prfPrdOeNetMillSm3', 'prfPrdProducedWaterInFieldMillSm3']
+        else:
+            cols = ["prfInformationCarrier", "prfPrdOilNetMillSm3", "prfPrdGasNetBillSm3",
+                    "prfPrdNGLNetMillSm3", "prfPrdCondensateNetMillSm3", "prfPrdOeNetMillSm3",
+                    "prfPrdProducedWaterInFieldMillSm3"]
+            # make columns as numeric
+        for col in df.drop(["prfInformationCarrier"], axis=1).columns:
+            df[col]=df[col].astype("float")
+        if field_name == "all":
+            return  df[cols]
+        else:
+            if field_name.upper() not in df["prfInformationCarrier"].unique():
+                raise ValueError("field name needs to be one of this name:", df["prfInformationCarrier"].unique())
+            return df[df["prfInformationCarrier"]==field_name.upper()][cols]
 
-    def get_field_production_yearly(self):
-        '''
-        return: production yearly data
-        '''
-        url_dataset = self.npd_path+"field/production-yearly-by-field"
-        return self._get_dataframe_data(url_dataset).set_index('prfYear')
 
-    def get_field_cumulative_production(self):
+    def get_field_production_yearly(self, field_name="all"):
         '''
-        return: cumulative production
+        Get production per field on yearly basis
+        example:
+        field().get_field_production_yearly()
+        return a dataframe
+        optional argument are field name currently defaulted to all fields
+        could select one field
         '''
-        url_dataset=self.npd_path+"field/production-yearly-total"
+        
+        url_dataset=self._get_total_path(tag_name="field_production_yearly")
+        df = self._get_dataframe_data(url_dataset).set_index('prfYear')
 
-        return self._get_dataframe_data(url_dataset).set_index('prfYear')
+        if field_name == "all":
+            return  df
+        else:
+            if field_name.upper() not in df["prfInformationCarrier"].unique():
+                raise ValueError("field name needs to be one of this name:", df["prfInformationCarrier"].unique())
+            return df[df["prfInformationCarrier"]==field_name.upper()]
 
-    def get_field_description(self):
+    def get_all_fields_cumulative_production(self):
+        '''
+        return: cumulative production for all fields
+
+        '''
+
+        url_dataset = self._get_total_path(tag_name="field_production_totalt_NCS_year__DisplayAllRows")
+        df= self._get_dataframe_data(url_dataset).set_index('prfYear')
+        return df
+
+
+
+    def get_field_description(self, field_name="all"):
         '''
         return: field description
+        field_name : optional argument to filter the dataframe for each field
         '''
+        
+        url_dataset = self._get_total_path(tag_name="field_description")
+        df= self._get_dataframe_data(url_dataset)
+        if field_name == "all":
+            return  df
+        else:
+            if field_name.upper() not in df['fldName'].unique():
+                raise ValueError("field name needs to be one of this name:", df['fldName'].unique())
+            return df[df['fldName']==field_name.upper()]
 
-        url_dataset=self.npd_path+"field/description"
-        return self._get_dataframe_data(url_dataset)
-
-    def get_field_inplace_volume(self):
+    def get_field_inplace_volume(self, field_name="all"):
         '''
         return: get field in place volume
+        field_name: return field inplace for a specific
         '''
-        url_dataset= self.npd_path+"field/in-place-volumes"
-        return self._get_dataframe_data(url_dataset)
+                
+        url_dataset = self._get_total_path(tag_name="field_in_place_volumes")
+        df= self._get_dataframe_data(url_dataset)
 
-    def get_field_licenses(self):
+        for col in df.drop(['fldName','fldDateOffResEstDisplay','fldNpdidField','DatesyncNPD'],axis=1).columns:
+            df[col] = df[col].astype("float")
+        if field_name == "all":
+            return df
+        else:
+            if field_name.upper() not in df['fldName'].unique():
+                raise ValueError("field name needs to be one of this name:", df['fldName'].unique())
+            return df[df['fldName'] == field_name.upper()]
+
+    def get_field_licenses(self, field_name="all"):
         '''
         return field licensees
+        field_name: filter the dataframe for each specific field
         '''
-        url_dataset= self.npd_path+"field/licensees"
-        return self._get_dataframe_data(url_dataset)
+        
+        url_dataset = self._get_total_path(tag_name="field_licensee_hst")
 
-    def get_field_operators(self):
+        df= self._get_dataframe_data(url_dataset)
+        if field_name == "all":
+            return df
+        else:
+            if field_name.upper() not in df['fldName'].unique():
+                raise ValueError("field name needs to be one of this name:", df['fldName'].unique())
+            return df[df['fldName'] == field_name.upper()]
+
+    def get_field_operators(self, field_name="all"):
         '''
         return field operators
+        field_name: filter the dataframe for specific field
         '''
-        url_dataset= self.npd_path+"field/operators"
-        return self._get_dataframe_data(url_dataset)
+        url_dataset = self._get_total_path(tag_name="field_operator_hst")
+        df= self._get_dataframe_data(url_dataset)
+        if field_name == "all":
+            return df
+        else:
+            if field_name.upper() not in df['fldName'].unique():
+                raise ValueError("field name needs to be one of this name:", df['fldName'].unique())
+            return df[df['fldName'] == field_name.upper()]
 
-    def get_field_overview(self):
+
+    def get_field_overview(self, field_name="all"):
         '''
         return: field overview
+        field_name: filiter field overview for a specific field
         '''
-        url_dataset = self.npd_path+"field/overview"
-        return self._get_dataframe_data(url_dataset)
+        
+        url_dataset = self._get_total_path(tag_name="field")
 
-    def get_field_owners(self):
+        df= self._get_dataframe_data(url_dataset)
+        if field_name == "all":
+            return df
+        else:
+            if field_name.upper() not in df['fldName'].unique():
+                raise ValueError("field name needs to be one of this name:", df['fldName'].unique())
+            return df[df['fldName'] == field_name.upper()]
+
+    def get_field_owners(self, field_name="all"):
         '''
         return field owners
         '''
-        url_dataset=self.npd_path+"field/owners"
-        return self._get_dataframe_data(url_dataset)
+        url_dataset = self._get_total_path(tag_name="field_owner_hst")
+        df= self._get_dataframe_data(url_dataset)
+        if field_name == "all":
+            return df
+        else:
+            if field_name.upper() not in df['fldName'].unique():
+                raise ValueError("field name needs to be one of this name:", df['fldName'].unique())
+            return df[df['fldName'] == field_name.upper()]
 
-    def get_field_reserves(self):
+    def get_field_reserves(self, field_name="all"):
         '''
         return field reserves
         '''
-        url_dataset=self.npd_path+"field/reserves"
-        return self._get_dataframe_data(url_dataset)
+        url_dataset = self._get_total_path(tag_name="field_reserves")
+        df= self._get_dataframe_data(url_dataset)
+        if field_name == "all":
+            return df
+        else:
+            if field_name.upper() not in df['fldName'].unique():
+                raise ValueError("field name needs to be one of this name:", df['fldName'].unique())
+            return df[df['fldName'] == field_name.upper()]
 
-    def get_field_status(self):
+
+    def get_field_status(self, field_name="all"):
         '''
         return field status
         '''
-        url_dataset=self.npd_path+"field/status"
-        return self._get_dataframe_data(url_dataset)
+        url_dataset = self._get_total_path(tag_name="field_activity_status_hst")
+        df= self._get_dataframe_data(url_dataset)
+        if field_name == "all":
+            return df
+        else:
+            if field_name.upper() not in df['fldName'].unique():
+                raise ValueError("field name needs to be one of this name:", df['fldName'].unique())
+            return df[df['fldName'] == field_name.upper()]
 
-    def get_field_investments(self):
+    def get_field_investments(self, field_name="all"):
         '''
         get field investment yearly
+        return dataframe
+        field_name: optional arguments to filter based on field_name
         '''
-        url_dataset=self.npd_path+"investments/yearly-by-field"
-        return self._get_dataframe_data(url_dataset)
+        url_dataset = self._get_total_path(tag_name="field_investment_yearly")
+        df= self._get_dataframe_data(url_dataset)
+        df['prfInvestmentsMillNOK']=df['prfInvestmentsMillNOK'].astype("float")
+        if field_name == "all":
+            return df
+        else:
+            if field_name.upper() not in df['prfInformationCarrier'].unique():
+                raise ValueError("field name needs to be one of this name:", df['prfInformationCarrier'].unique())
+            return df[df['prfInformationCarrier'] == field_name.upper()]
+
+    def get_field_expected_investments(self, field_name="all"):
+        '''
+        get field investment yearly
+        return dataframe
+        field_name: optional arguments to filter based on field_name
+        '''
+        url_dataset = self._get_total_path(tag_name="field_investment_expected")
+        df= self._get_dataframe_data(url_dataset)
+
+        if field_name == "all":
+            return df
+        else:
+            if field_name.upper() not in df['prfInformationCarrier'].unique():
+                raise ValueError("field name needs to be one of this name:", df['prfInformationCarrier'].unique())
+            return df[df['prfInformationCarrier'] == field_name.upper()]
 
 
+    def get_field_pdo_plan(self, field_name="all"):
+        '''
+        get field investment yearly
+        return dataframe
+        field_name: optional arguments to filter based on field_name
+        '''
+        url_dataset = self._get_total_path(tag_name="field_pdo_hst")
+        df= self._get_dataframe_data(url_dataset)
 
+        if field_name == "all":
+            return df
+        else:
+            if field_name.upper() not in df['fldName'].unique():
+                raise ValueError("field name needs to be one of this name:", df['fldName'].unique())
+            return df[df['fldName'] == field_name.upper()]

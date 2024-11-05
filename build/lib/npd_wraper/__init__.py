@@ -6,5 +6,6 @@ from .npd_company import company
 from .npd_discovery import discovery
 from .npd_facility import  facility
 from .npd_stratigraphy import stratigraphy
+from .npd_shape import npd_shape
 
 

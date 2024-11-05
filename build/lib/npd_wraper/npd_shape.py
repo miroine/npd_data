@@ -10,21 +10,21 @@ class npd_shape(npd):
     def __init__(self):
         super(npd, self).__init__()
         self.shape_dict={
-            "afex": "https://factpages.sodir.no/downloads/shape/afxAreaCurrent.zip",
-            "afex_block": "https://factpages.sodir.no/downloads/shape/afxAreaSplitByBlock.zip",
-            "license": "https://factpages.sodir.no/downloads/shape/prlAreaCurrent.zip",
-            "license_block": "https://factpages.sodir.no/downloads/shape/prlAreaSplitByBlock.zip",
-            "license_apa_gross": "https://factpages.sodir.no/downloads/shape/apaAreaGross.zip",
-            "license_apa_net": "https://factpages.sodir.no/downloads/shape/apaAreaNet.zip",
-            "wellbore": "https://factpages.sodir.no/downloads/shape/wlbPoint.zip",
-            "baa_blocks": "https://factpages.sodir.no/downloads/shape/baaAreaSplitByBlock.zip",
-            "field": "https://factpages.sodir.no/downloads/shape/fldArea.zip",
-            "discovery": "https://factpages.sodir.no/downloads/shape/dscArea.zip",
-            "facility": "https://factpages.sodir.no/downloads/shape/fclPoint.zip",
-            "tuf": "https://factpages.sodir.no/downloads/shape/pipLine.zip",
-            "block": "https://factpages.sodir.no/downloads/shape/blkArea.zip",
-            "quadrant": "https://factpages.sodir.no/downloads/shape/qadArea.zip",
-            "subarea": "https://factpages.sodir.no/downloads/shape/subArea.zip"
+            "afex": "https://factpages.npd.no/downloads/shape/afxAreaCurrent.zip",
+            "afex_block": "https://factpages.npd.no/downloads/shape/afxAreaSplitByBlock.zip",
+            "license": "https://factpages.npd.no/downloads/shape/prlAreaCurrent.zip",
+            "license_block": "https://factpages.npd.no/downloads/shape/prlAreaSplitByBlock.zip",
+            "license_apa_gross": "https://factpages.npd.no/downloads/shape/apaAreaGross.zip",
+            "license_apa_net": "https://factpages.npd.no/downloads/shape/apaAreaNet.zip",
+            "wellbore": "https://factpages.npd.no/downloads/shape/wlbPoint.zip",
+            "baa_blocks": "https://factpages.npd.no/downloads/shape/baaAreaSplitByBlock.zip",
+            "field": "https://factpages.npd.no/downloads/shape/fldArea.zip",
+            "discovery": "https://factpages.npd.no/downloads/shape/dscArea.zip",
+            "facility": "https://factpages.npd.no/downloads/shape/fclPoint.zip",
+            "tuf": "https://factpages.npd.no/downloads/shape/pipLine.zip",
+            "block": "https://factpages.npd.no/downloads/shape/blkArea.zip",
+            "quadrant": "https://factpages.npd.no/downloads/shape/qadArea.zip",
+            "subarea": "https://factpages.npd.no/downloads/shape/subArea.zip"
         }
     def get_afex(self):
         return gpd.read_file(self.shape_dict["afex"])

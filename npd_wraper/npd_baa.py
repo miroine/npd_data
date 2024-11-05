@@ -5,21 +5,21 @@ class baa(npd):
         '''
         get block area
         '''
-        url_dataset=self.npd_path+"baa/area"
+        url_dataset = self._get_total_path(tag_name="bsns_arr_area_area_poly_hst")
         return self._get_dataframe_data(url_dataset)
 
     def get_baa_licensees(self):
         '''
         return: get blocks licenses
         '''
-        url_dataset=self.npd_path+"baa/licensees"
+        url_dataset = self._get_total_path(tag_name="bsns_arr_area_licensee_hst")
         return self._get_dataframe_data(url_dataset)
 
     def get_baa_operators(self):
         '''
         return: get blocks licenses
         '''
-        url_dataset=self.npd_path+"baa/operators"
+        url_dataset = self._get_total_path(tag_name="bsns_arr_area")
         return self._get_dataframe_data(url_dataset)
 
     def get_baa_overview(self):
@@ -27,13 +27,20 @@ class baa(npd):
         return: get block overview
         '''
 
-        url_dataset=self.npd_path+"baa/overview"
+        url_dataset = self._get_total_path(tag_name="bsns_arr_area")
         return self._get_dataframe_data(url_dataset)
 
     def get_baa_transfers(self):
         '''
         get block transfers
         '''
-        url_dataset=self.npd_path+"baa/transfers"
+        url_dataset = self._get_total_path(tag_name="bsns_arr_area_transfer_hst")
+        return self._get_dataframe_data(url_dataset)
+    
+    def get_baa_co2(self):
+        '''
+        get block transfers
+        '''
+        url_dataset = self._get_total_path(tag_name="bsns_arr_area_co2")
         return self._get_dataframe_data(url_dataset)
 
